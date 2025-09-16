@@ -1,0 +1,64 @@
+import tkinter as tk
+from tkinter import messagebox
+
+Mycalc = tk.Tk()
+
+Mycalc.title("Mycalculator")
+Mycalc.geometry("400x500")
+Mycalc.config(bg="lightblue")
+
+entry=tk.Entry(Mycalc, font=("Arial",20),borderwidth=5,relief="ridge",justify="right")
+entry.pack(fill="both",pady=20,ipady=10)
+
+safe_dict = {
+    __builtins__ : None
+}
+
+
+def add_text(text):
+    entry.insert(tk.END, text)
+
+def clear_entry():
+    entry.delete(0, tk.END)
+
+def evaluate_expression():
+    try:
+        expression = entry.get()
+        result = eval(expression, safe_dict)
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, str(result))
+    except Exception as e:
+        messagebox.showerror("Error", f"Invalid Expression. {e}")
+
+
+myframe = tk.Frame(Mycalc)
+myframe.pack()
+
+key = [
+    ["7","8","9","/"],
+    ["4","5","6","*"],
+    ["1","2","3","-"],
+    ["0",".","+","(",")"],
+    ["C","=","Exit"]
+]
+
+
+
+for row in key:
+    row_frame = tk.Frame(myframe)
+    row_frame.pack(fill="both")
+    for btn_txt in row:
+        def cmd(i=btn_txt):
+            if(i == "="):
+                evaluate_expression()
+            elif(i == "C"):
+                clear_entry()
+            elif(i == "Exit"):
+                Mycalc.quit()
+            else:
+                add_text(i)
+
+        b= tk.Button(row_frame,text=btn_txt, width=6,height=2, font=("Arial",14), command=cmd)
+        b.pack(fill="both",expand=True, side="left")
+
+Mycalc.mainloop()
